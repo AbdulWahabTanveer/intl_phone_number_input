@@ -19,6 +19,7 @@ class SelectorButton extends StatelessWidget {
   final bool isEnabled;
   final bool isScrollControlled;
   final double selectorWidth;
+  final double selectorHeight;
   final String selectorIcon;
 
   final ValueChanged<Country?> onCountryChanged;
@@ -37,6 +38,7 @@ class SelectorButton extends StatelessWidget {
     required this.isScrollControlled,
     required this.selectorWidth,
     required this.selectorIcon,
+    required this.selectorHeight,
   }) : super(key: key);
 
   @override
@@ -90,6 +92,7 @@ class SelectorButton extends StatelessWidget {
                 : null,
             child: SizedBox(
               width: selectorWidth,
+              height: selectorHeight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

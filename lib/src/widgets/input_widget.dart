@@ -41,6 +41,7 @@ class InternationalPhoneNumberInput extends StatefulWidget {
   final ValueChanged<PhoneNumber>? onInputChanged;
   final ValueChanged<bool>? onInputValidated;
   final double selectorWidth;
+  final double selectorHeight;
   final String selectorIcon;
   final VoidCallback? onSubmit;
   final ValueChanged<String>? onFieldSubmitted;
@@ -130,7 +131,8 @@ class InternationalPhoneNumberInput extends StatefulWidget {
       this.countries,
       required this.borderRadius,
       required this.selectorWidth,
-      required this.selectorIcon})
+      required this.selectorIcon,
+      required this.selectorHeight})
       : super(key: key);
 
   @override
@@ -311,6 +313,7 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
         isEnabled: widget.isEnabled,
         autoFocusSearchField: widget.autoFocusSearch,
         isScrollControlled: widget.countrySelectorScrollControlled,
+        selectorHeight: widget.selectorHeight,
       ));
     }
 
@@ -398,84 +401,76 @@ class _InputWidgetView
     final countryCode = state.country?.alpha2Code ?? '';
     final dialCode = state.country?.dialCode ?? '';
 
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          if (!widget.selectorConfig.setSelectorButtonAsPrefixIcon) ...[
-            Container(
-              decoration: BoxDecoration(
-                  // color: Colors.pink,
-                  border: Border.all(
-                      color: widget.inputDecoration!.border!.borderSide.color,
-                      width: widget.inputDecoration!.border!.borderSide.width),
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(widget.borderRadius))),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  SelectorButton(
-                    selectorIcon: widget.selectorIcon,
-                    selectorWidth: widget.selectorWidth,
-                    country: state.country,
-                    countries: state.countries,
-                    onCountryChanged: state.onCountryChanged,
-                    selectorConfig: widget.selectorConfig,
-                    selectorTextStyle: widget.selectorTextStyle,
-                    searchBoxDecoration: widget.searchBoxDecoration,
-                    locale: state.locale,
-                    isEnabled: widget.isEnabled,
-                    autoFocusSearchField: widget.autoFocusSearch,
-                    isScrollControlled: widget.countrySelectorScrollControlled,
-                  ),
-                  SizedBox(
-                    height: state.selectorButtonBottomPadding,
-                  ),
-                ],
-              ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        if (!widget.selectorConfig.setSelectorButtonAsPrefixIcon) ...[
+          Container(
+            // height: widget.selectorHeight,
+            decoration: BoxDecoration(
+                // color: Colors.pink,
+                border: Border.all(
+                    color: widget.inputDecoration!.border!.borderSide.color,
+                    width: widget.inputDecoration!.border!.borderSide.width),
+                borderRadius:
+                    BorderRadius.all(Radius.circular(widget.borderRadius))),
+            child: SelectorButton(
+              selectorIcon: widget.selectorIcon,
+              selectorWidth: widget.selectorWidth,
+              selectorHeight: widget.selectorHeight,
+              country: state.country,
+              countries: state.countries,
+              onCountryChanged: state.onCountryChanged,
+              selectorConfig: widget.selectorConfig,
+              selectorTextStyle: widget.selectorTextStyle,
+              searchBoxDecoration: widget.searchBoxDecoration,
+              locale: state.locale,
+              isEnabled: widget.isEnabled,
+              autoFocusSearchField: widget.autoFocusSearch,
+              isScrollControlled: widget.countrySelectorScrollControlled,
             ),
-            SizedBox(width: widget.spaceBetweenSelectorAndTextField),
-          ],
-          Flexible(
-            child: TextFormField(
-              key: widget.fieldKey ?? Key(TestHelper.TextInputKeyValue),
-              textDirection: TextDirection.ltr,
-              controller: state.controller,
-              cursorColor: widget.cursorColor,
-              focusNode: widget.focusNode,
-              enabled: widget.isEnabled,
-              autofocus: widget.autoFocus,
-              keyboardType: widget.keyboardType,
-              textInputAction: widget.keyboardAction,
-              style: widget.textStyle,
-              decoration: state.getInputDecoration(widget.inputDecoration),
-              textAlign: widget.textAlign,
-              textAlignVertical: widget.textAlignVertical,
-              onEditingComplete: widget.onSubmit,
-              onFieldSubmitted: widget.onFieldSubmitted,
-              autovalidateMode: widget.autoValidateMode,
-              autofillHints: widget.autofillHints,
-              validator: widget.validator ?? state.validator,
-              onSaved: state.onSaved,
-              scrollPadding: widget.scrollPadding,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(widget.maxLength),
-                widget.formatInput
-                    ? AsYouTypeFormatter(
-                        isoCode: countryCode,
-                        dialCode: dialCode,
-                        onInputFormatted: (TextEditingValue value) {
-                          state.controller!.value = value;
-                        },
-                      )
-                    : FilteringTextInputFormatter.digitsOnly,
-              ],
-              onChanged: state.onChanged,
-            ),
-          )
+          ),
+          SizedBox(width: widget.spaceBetweenSelectorAndTextField),
         ],
-      ),
+        Flexible(
+          child: TextFormField(
+            key: widget.fieldKey ?? Key(TestHelper.TextInputKeyValue),
+            textDirection: TextDirection.ltr,
+            controller: state.controller,
+            cursorColor: widget.cursorColor,
+            focusNode: widget.focusNode,
+            enabled: widget.isEnabled,
+            autofocus: widget.autoFocus,
+            keyboardType: widget.keyboardType,
+            textInputAction: widget.keyboardAction,
+            style: widget.textStyle,
+            decoration: state.getInputDecoration(widget.inputDecoration),
+            textAlign: widget.textAlign,
+            textAlignVertical: widget.textAlignVertical,
+            onEditingComplete: widget.onSubmit,
+            onFieldSubmitted: widget.onFieldSubmitted,
+            autovalidateMode: widget.autoValidateMode,
+            autofillHints: widget.autofillHints,
+            validator: widget.validator ?? state.validator,
+            onSaved: state.onSaved,
+            scrollPadding: widget.scrollPadding,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(widget.maxLength),
+              widget.formatInput
+                  ? AsYouTypeFormatter(
+                      isoCode: countryCode,
+                      dialCode: dialCode,
+                      onInputFormatted: (TextEditingValue value) {
+                        state.controller!.value = value;
+                      },
+                    )
+                  : FilteringTextInputFormatter.digitsOnly,
+            ],
+            onChanged: state.onChanged,
+          ),
+        )
+      ],
     );
   }
 }
