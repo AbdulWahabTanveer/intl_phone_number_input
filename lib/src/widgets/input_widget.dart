@@ -40,7 +40,8 @@ class InternationalPhoneNumberInput extends StatefulWidget {
 
   final ValueChanged<PhoneNumber>? onInputChanged;
   final ValueChanged<bool>? onInputValidated;
-
+  final double selectorWidth;
+  final String selectorIcon;
   final VoidCallback? onSubmit;
   final ValueChanged<String>? onFieldSubmitted;
   final String? Function(String?)? validator;
@@ -80,6 +81,8 @@ class InternationalPhoneNumberInput extends StatefulWidget {
   final TextAlign textAlign;
   final TextAlignVertical textAlignVertical;
   final EdgeInsets scrollPadding;
+
+  final double borderRadius;
 
   final FocusNode? focusNode;
   final Iterable<String>? autofillHints;
@@ -124,7 +127,10 @@ class InternationalPhoneNumberInput extends StatefulWidget {
       this.focusNode,
       this.cursorColor,
       this.autofillHints,
-      this.countries})
+      this.countries,
+      required this.borderRadius,
+      required this.selectorWidth,
+      required this.selectorIcon})
       : super(key: key);
 
   @override
@@ -293,6 +299,8 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
     if (widget.selectorConfig.setSelectorButtonAsPrefixIcon) {
       return value.copyWith(
           prefixIcon: SelectorButton(
+        selectorIcon: widget.selectorIcon,
+        selectorWidth: widget.selectorWidth,
         country: country,
         countries: countries,
         onCountryChanged: onCountryChanged,
@@ -396,25 +404,36 @@ class _InputWidgetView
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           if (!widget.selectorConfig.setSelectorButtonAsPrefixIcon) ...[
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                SelectorButton(
-                  country: state.country,
-                  countries: state.countries,
-                  onCountryChanged: state.onCountryChanged,
-                  selectorConfig: widget.selectorConfig,
-                  selectorTextStyle: widget.selectorTextStyle,
-                  searchBoxDecoration: widget.searchBoxDecoration,
-                  locale: state.locale,
-                  isEnabled: widget.isEnabled,
-                  autoFocusSearchField: widget.autoFocusSearch,
-                  isScrollControlled: widget.countrySelectorScrollControlled,
-                ),
-                SizedBox(
-                  height: state.selectorButtonBottomPadding,
-                ),
-              ],
+            Container(
+              decoration: BoxDecoration(
+                  // color: Colors.pink,
+                  border: Border.all(
+                      color: widget.inputDecoration!.border!.borderSide.color,
+                      width: widget.inputDecoration!.border!.borderSide.width),
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(widget.borderRadius))),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SelectorButton(
+                    selectorIcon: widget.selectorIcon,
+                    selectorWidth: widget.selectorWidth,
+                    country: state.country,
+                    countries: state.countries,
+                    onCountryChanged: state.onCountryChanged,
+                    selectorConfig: widget.selectorConfig,
+                    selectorTextStyle: widget.selectorTextStyle,
+                    searchBoxDecoration: widget.searchBoxDecoration,
+                    locale: state.locale,
+                    isEnabled: widget.isEnabled,
+                    autoFocusSearchField: widget.autoFocusSearch,
+                    isScrollControlled: widget.countrySelectorScrollControlled,
+                  ),
+                  SizedBox(
+                    height: state.selectorButtonBottomPadding,
+                  ),
+                ],
+              ),
             ),
             SizedBox(width: widget.spaceBetweenSelectorAndTextField),
           ],
