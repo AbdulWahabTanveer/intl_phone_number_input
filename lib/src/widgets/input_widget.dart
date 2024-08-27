@@ -409,7 +409,7 @@ class _InputWidgetView
           Container(
             // height: widget.selectorHeight,
             decoration: BoxDecoration(
-                // color: Colors.pink,
+                color: Color.fromRGBO(255, 255, 255, 1),
                 border: Border.all(
                     color: widget.inputDecoration!.border!.borderSide.color,
                     width: widget.inputDecoration!.border!.borderSide.width),
